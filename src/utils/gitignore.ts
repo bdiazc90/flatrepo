@@ -1,10 +1,11 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { minimatch } from 'minimatch';
 
 export const DEFAULT_IGNORE_PATTERNS = [
   'node_modules/**',
   'package-lock.json',
-  '.DS_Store',
+  '**/.DS_Store',
   '.gitignore',
   '.git/**',
   'dist/**',
@@ -18,7 +19,12 @@ async function readGitignoreFile(filePath: string): Promise<string[]> {
       .split('\n')
       .map(line => line.trim())
       .filter(line => line && !line.startsWith('#'))
-      .map(pattern => pattern.endsWith('/') ? `${pattern}**` : pattern);
+      .map(pattern => {
+        if (!pattern.startsWith('/') && !pattern.startsWith('**/')) {
+          return `**/${pattern}`;
+        }
+        return pattern.startsWith('/') ? pattern.slice(1) : pattern;
+      });
   } catch (error) {
     return [];
   }
@@ -28,10 +34,8 @@ export async function getGitignorePatterns(): Promise<string[]> {
   const projectDir = process.cwd();
   const projectGitignorePath = path.join(projectDir, '.gitignore');
   
-  // Get patterns from the project's .gitignore
   const projectPatterns = await readGitignoreFile(projectGitignorePath);
   
-  // Get patterns from any parent .gitignore files
   const parentPatterns: string[] = [];
   let currentDir = projectDir;
   let parentDir = path.dirname(currentDir);
@@ -44,15 +48,17 @@ export async function getGitignorePatterns(): Promise<string[]> {
     currentDir = parentDir;
     parentDir = path.dirname(currentDir);
   }
+
+  const allPatterns = [...new Set([...DEFAULT_IGNORE_PATTERNS, ...projectPatterns, ...parentPatterns])];
   
-  // Combine all patterns, removing duplicates
-  const allPatterns = [...new Set([...projectPatterns, ...parentPatterns])];
-  
-  // Convert relative patterns to absolute if needed
   return allPatterns.map(pattern => {
     if (pattern.startsWith('/')) {
-      return pattern.slice(1); // Remove leading slash
+      return pattern.slice(1);
     }
     return pattern;
   });
+}
+
+export function shouldIgnoreFile(filePath: string, patterns: string[]): boolean {
+  return patterns.some(pattern => minimatch(filePath, pattern, { dot: true }));
 }

@@ -1,10 +1,10 @@
-import { glob } from 'glob';
-import * as fs from 'fs/promises';
-import * as path from 'path';
-import { stringify } from 'yaml';
-import { FileInfo, RepoStats, PackageJson } from './types/index.js';
-import { BINARY_EXTENSIONS, EXTENSION_TO_LANGUAGE, getBinaryFileType } from './utils/file-types.js';
-import { DEFAULT_IGNORE_PATTERNS, getGitignorePatterns } from './utils/gitignore.js';
+import { glob } from "glob";
+import * as fs from "fs/promises";
+import * as path from "path";
+import { stringify } from "yaml";
+import { FileInfo, RepoStats, PackageJson } from "./types/index.js";
+import { BINARY_EXTENSIONS, EXTENSION_TO_LANGUAGE, getBinaryFileType } from "./utils/file-types.js";
+import { DEFAULT_IGNORE_PATTERNS, getGitignorePatterns, shouldIgnoreFile } from "./utils/gitignore.js";
 
 function getLanguageFromExtension(extension: string): string {
 	return EXTENSION_TO_LANGUAGE[extension] || "";
@@ -21,38 +21,38 @@ async function getProjectFiles(outputPath: string, includeBin: boolean): Promise
 
 	try {
 		const matches = await glob("**/*.*", {
-			ignore: ignorePatterns,
 			dot: true,
 			nodir: true,
 		});
 
 		for (const match of matches) {
+			if (match === outputPath) continue;
+
+			if (shouldIgnoreFile(match, gitignorePatterns)) continue;
 			try {
 				const stat = await fs.stat(match);
 				const extension = path.extname(match).toLowerCase();
 
 				if (stat.isFile()) {
-          if (BINARY_EXTENSIONS.has(extension)) {
-            if (includeBin) {
-              files.push({ 
-                path: match, 
-                content: `(Archivo binario de ${getBinaryFileType(extension)})`,
-                extension,
-                isBinary: true
-              });
-            }
-          } else {
-            const content = await fs.readFile(match, 'utf-8');
-            files.push({ 
-              path: match, 
-              content,
-              extension,
-              isBinary: false
-            });
-          }
-        }
-
-
+					if (BINARY_EXTENSIONS.has(extension)) {
+						if (includeBin) {
+							files.push({
+								path: match,
+								content: `(Archivo binario de ${getBinaryFileType(extension)})`,
+								extension,
+								isBinary: true,
+							});
+						}
+					} else {
+						const content = await fs.readFile(match, "utf-8");
+						files.push({
+							path: match,
+							content,
+							extension,
+							isBinary: false,
+						});
+					}
+				}
 			} catch (error) {
 				console.warn(`Advertencia: No se pudo procesar ${match}:`, error);
 			}

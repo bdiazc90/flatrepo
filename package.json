@@ -1,6 +1,6 @@
 {
   "name": "flatrepo",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Generate markdown documentation for repositories",
   "main": "dist/index.js",
   "bin": {
@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "glob": "^11.0.0",
+    "minimatch": "^10.0.1",
     "yaml": "^2.6.1",
     "yargs": "^17.7.2"
   }
