@@ -10,6 +10,15 @@ Very useful to load knowledge to your favorite AI Agent like **Claude AI Project
 npm install -D flatrepo
 ```
 
+_Optional: You can set as script in your package.json_
+```json
+{
+  "scripts": {
+    "flatrepo": "flatrepo"
+  }
+}
+```
+
 ## Usage
 - Generate documentation with default filename (flatrepo_YYYYMMDDHHIISS.md):
 ```bash

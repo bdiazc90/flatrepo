@@ -4,7 +4,7 @@
   "description": "Generate markdown documentation for repositories",
   "main": "dist/index.js",
   "bin": {
-    "flatrepo": "./dist/cli.js"
+    "flatrepo": "dist/cli.js"
   },
   "type": "module",
   "scripts": {
@@ -26,7 +26,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bdiazc90/flatrepo"
+    "url": "git+https://github.com/bdiazc90/flatrepo.git"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
