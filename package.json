@@ -12,9 +12,14 @@
     "flatrepo": "node dist/cli.js"
   },
   "keywords": [
-    "documentation",
+    "flatten",
     "markdown",
     "repository",
+    "documentation",
+    "claude",
+    "openai",
+    "chatgpt",
+    "knowledge",
     "git"
   ],
   "author": "bdiazc90",
