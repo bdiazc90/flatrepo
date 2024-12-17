@@ -18,6 +18,7 @@ function getDefaultFilename(): string {
 
 interface Arguments {
   output?: string;
+  includeBin?: boolean;
 }
 
 yargs(hideBin(process.argv))
@@ -25,16 +26,22 @@ yargs(hideBin(process.argv))
     '$0 [output]',
     'Generate repository documentation',
     (yargs) => {
-      return yargs.positional('output', {
+      return yargs
+      .positional('output', {
         describe: 'Output markdown file',
         type: 'string',
         default: getDefaultFilename()
+      })
+      .option('include-bin', {
+        type: 'boolean',
+        describe: 'Include binary files with description',
+        default: false
       });
     },
     async (argv) => {
       const outputFile = argv.output || getDefaultFilename();
       try {
-        await generateDocs(outputFile);
+        await generateDocs(outputFile, argv.includeBin);
         console.log(`FlatRepo generated successfully at: ${outputFile}`);
       } catch (error) {
         console.error('Error generating documentation:', error);

@@ -20,14 +20,19 @@ _Optional: You can set as script in your package.json_
 ```
 
 ## Usage
-- Generate documentation with default filename (flatrepo_YYYYMMDDHHIISS.md):
+- Generate documentation in to default filename (flatrepo_YYYYMMDDHHIISS.md):
 ```bash
 flatrepo
 ```
 
-- Generate documentation with custom filename:
+- Generate documentation in to a custom filename:
 ```bash
 flatrepo myrepo.md
+```
+
+- Generate documentation including a description of binary files:
+```bash
+flatrepo myrepo.md --include-bin
 ```
 
 ## Features
@@ -35,6 +40,7 @@ flatrepo myrepo.md
 - Generates markdown documentation of your repository
 - Includes YAML header with repository statistics
 - Ignore binary files (images, videos, zip, etc...)
+    - Include with description
 - Respects .gitignore patterns
 - Supports multiple file types
 - Formats code blocks according to file type

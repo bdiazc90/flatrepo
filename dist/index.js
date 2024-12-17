@@ -1,60 +1,47 @@
-import { glob } from "glob";
-import * as fs from "fs/promises";
-import * as path from "path";
-import { stringify } from "yaml";
-// Constants
-const EXTENSION_TO_LANGUAGE = {
-    ".js": "javascript",
-    ".jsx": "jsx",
-    ".ts": "typescript",
-    ".tsx": "tsx",
-    ".md": "markdown",
-    ".html": "html",
-    ".css": "css",
-    ".json": "json",
-};
-const IGNORE_PATTERNS = ["node_modules/**", ".gitignore", ".git/**", "dist/**", ".next/**"];
-async function getGitignorePatterns() {
-    try {
-        const gitignoreContent = await fs.readFile(".gitignore", "utf-8");
-        const patterns = gitignoreContent
-            .split("\n")
-            .map((line) => line.trim())
-            .filter((line) => line && !line.startsWith("#"))
-            .map((pattern) => (pattern.endsWith("/") ? `${pattern}**` : pattern));
-        return patterns;
-    }
-    catch (error) {
-        console.log("No se encontró .gitignore");
-        return [];
-    }
-}
-// Utility functions
+import { glob } from 'glob';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import { stringify } from 'yaml';
+import { BINARY_EXTENSIONS, EXTENSION_TO_LANGUAGE, getBinaryFileType } from './utils/file-types.js';
+import { DEFAULT_IGNORE_PATTERNS, getGitignorePatterns } from './utils/gitignore.js';
 function getLanguageFromExtension(extension) {
     return EXTENSION_TO_LANGUAGE[extension] || "";
 }
-async function getProjectFiles(outputPath) {
+async function getProjectFiles(outputPath, includeBin) {
     const files = [];
     const gitignorePatterns = await getGitignorePatterns();
-    const ignorePatterns = [...IGNORE_PATTERNS, ...gitignorePatterns, outputPath];
+    const ignorePatterns = [...DEFAULT_IGNORE_PATTERNS, ...gitignorePatterns, outputPath];
     console.log("Patrones ignorados:", ignorePatterns);
     try {
         const matches = await glob("**/*.*", {
             ignore: ignorePatterns,
             dot: true,
-            nodir: true, // Añadimos esta opción para ignorar directorios
+            nodir: true,
         });
         for (const match of matches) {
             try {
                 const stat = await fs.stat(match);
-                // Solo procesar archivos, no directorios
+                const extension = path.extname(match).toLowerCase();
                 if (stat.isFile()) {
-                    const content = await fs.readFile(match, "utf-8");
-                    files.push({
-                        path: match,
-                        content,
-                        extension: path.extname(match),
-                    });
+                    if (BINARY_EXTENSIONS.has(extension)) {
+                        if (includeBin) {
+                            files.push({
+                                path: match,
+                                content: `(Archivo binario de ${getBinaryFileType(extension)})`,
+                                extension,
+                                isBinary: true
+                            });
+                        }
+                    }
+                    else {
+                        const content = await fs.readFile(match, 'utf-8');
+                        files.push({
+                            path: match,
+                            content,
+                            extension,
+                            isBinary: false
+                        });
+                    }
                 }
             }
             catch (error) {
@@ -75,11 +62,8 @@ function calculateStats(files) {
         fileTypes: {},
     };
     for (const file of files) {
-        // Count lines
         stats.totalLines += file.content.split("\n").length;
-        // Count file types
         stats.fileTypes[file.extension] = (stats.fileTypes[file.extension] || 0) + 1;
-        // Count languages
         const language = getLanguageFromExtension(file.extension);
         if (language) {
             stats.languages[language] = (stats.languages[language] || 0) + 1;
@@ -121,15 +105,14 @@ function generateMarkdown(files, stats) {
     return header + content;
 }
 // Main function
-export async function generateDocs(outputPath) {
+export async function generateDocs(outputPath, includeBin = false) {
     try {
-        const files = await getProjectFiles(outputPath);
+        const files = await getProjectFiles(outputPath, includeBin);
         const stats = calculateStats(files);
         const markdown = generateMarkdown(files, stats);
         await fs.writeFile(outputPath, markdown, "utf-8");
     }
     catch (error) {
-        // Manejo más seguro del error
         if (error instanceof Error) {
             throw new Error(`Failed to generate documentation: ${error.message}`);
         }
