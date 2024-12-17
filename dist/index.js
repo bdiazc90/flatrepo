@@ -1,64 +1,69 @@
-import { glob } from 'glob';
-import * as fs from 'fs/promises';
-import * as path from 'path';
-import { stringify } from 'yaml';
+import { glob } from "glob";
+import * as fs from "fs/promises";
+import * as path from "path";
+import { stringify } from "yaml";
 // Constants
 const EXTENSION_TO_LANGUAGE = {
-    '.js': 'javascript',
-    '.jsx': 'jsx',
-    '.ts': 'typescript',
-    '.tsx': 'tsx',
-    '.md': 'markdown',
-    '.html': 'html',
-    '.css': 'css',
-    '.json': 'json'
+    ".js": "javascript",
+    ".jsx": "jsx",
+    ".ts": "typescript",
+    ".tsx": "tsx",
+    ".md": "markdown",
+    ".html": "html",
+    ".css": "css",
+    ".json": "json",
 };
-const IGNORE_PATTERNS = [
-    'node_modules/**',
-    '.gitignore',
-    '.git/**',
-    'dist/**',
-    '.next/**'
-];
+const IGNORE_PATTERNS = ["node_modules/**", ".gitignore", ".git/**", "dist/**", ".next/**"];
 async function getGitignorePatterns() {
     try {
-        const gitignoreContent = await fs.readFile('.gitignore', 'utf-8');
+        const gitignoreContent = await fs.readFile(".gitignore", "utf-8");
         const patterns = gitignoreContent
-            .split('\n')
-            .map(line => line.trim())
-            .filter(line => line && !line.startsWith('#'))
-            .map(pattern => pattern.endsWith('/') ? `${pattern}**` : pattern);
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line && !line.startsWith("#"))
+            .map((pattern) => (pattern.endsWith("/") ? `${pattern}**` : pattern));
         return patterns;
     }
     catch (error) {
-        console.log('No se encontró .gitignore');
+        console.log("No se encontró .gitignore");
         return [];
     }
 }
 // Utility functions
 function getLanguageFromExtension(extension) {
-    return EXTENSION_TO_LANGUAGE[extension] || '';
+    return EXTENSION_TO_LANGUAGE[extension] || "";
 }
 async function getProjectFiles(outputPath) {
     const files = [];
     const gitignorePatterns = await getGitignorePatterns();
-    const ignorePatterns = [
-        ...IGNORE_PATTERNS,
-        ...gitignorePatterns,
-        outputPath
-    ];
-    console.log('Patrones ignorados:', ignorePatterns);
-    const matches = await glob('**/*.*', {
-        ignore: ignorePatterns,
-        dot: true
-    });
-    for (const match of matches) {
-        const content = await fs.readFile(match, 'utf-8');
-        files.push({
-            path: match,
-            content,
-            extension: path.extname(match)
+    const ignorePatterns = [...IGNORE_PATTERNS, ...gitignorePatterns, outputPath];
+    console.log("Patrones ignorados:", ignorePatterns);
+    try {
+        const matches = await glob("**/*.*", {
+            ignore: ignorePatterns,
+            dot: true,
+            nodir: true, // Añadimos esta opción para ignorar directorios
         });
+        for (const match of matches) {
+            try {
+                const stat = await fs.stat(match);
+                // Solo procesar archivos, no directorios
+                if (stat.isFile()) {
+                    const content = await fs.readFile(match, "utf-8");
+                    files.push({
+                        path: match,
+                        content,
+                        extension: path.extname(match),
+                    });
+                }
+            }
+            catch (error) {
+                console.warn(`Advertencia: No se pudo procesar ${match}:`, error);
+            }
+        }
+    }
+    catch (error) {
+        throw new Error(`Error al buscar archivos: ${error}`);
     }
     return files;
 }
@@ -67,11 +72,11 @@ function calculateStats(files) {
         totalFiles: files.length,
         totalLines: 0,
         languages: {},
-        fileTypes: {}
+        fileTypes: {},
     };
     for (const file of files) {
         // Count lines
-        stats.totalLines += file.content.split('\n').length;
+        stats.totalLines += file.content.split("\n").length;
         // Count file types
         stats.fileTypes[file.extension] = (stats.fileTypes[file.extension] || 0) + 1;
         // Count languages
@@ -83,17 +88,17 @@ function calculateStats(files) {
     return stats;
 }
 function generateHeader(files, stats) {
-    const pkgFile = files.find(f => f.path === 'package.json');
+    const pkgFile = files.find((f) => f.path === "package.json");
     const pkgData = pkgFile ? JSON.parse(pkgFile.content) : {};
     const header = {
         repository: {
             name: pkgData.name || path.basename(process.cwd()),
-            owner: 'unknown',
-            url: '',
+            owner: "unknown",
+            url: "",
         },
         generated: {
             timestamp: new Date().toISOString(),
-            tool: 'FlatRepo'
+            tool: "FlatRepo",
         },
         statistics: stats,
     };
@@ -104,15 +109,15 @@ function formatFileContent(file) {
     let content = `===  ${file.path}\n`;
     content += `\`\`\`${language}\n`;
     content += file.content;
-    if (!file.content.endsWith('\n'))
-        content += '\n';
-    content += '```\n';
+    if (!file.content.endsWith("\n"))
+        content += "\n";
+    content += "```\n";
     content += `=== EOF: ${file.path}\n\n`;
     return content;
 }
 function generateMarkdown(files, stats) {
     const header = generateHeader(files, stats);
-    const content = files.map(formatFileContent).join('');
+    const content = files.map(formatFileContent).join("");
     return header + content;
 }
 // Main function
@@ -121,7 +126,7 @@ export async function generateDocs(outputPath) {
         const files = await getProjectFiles(outputPath);
         const stats = calculateStats(files);
         const markdown = generateMarkdown(files, stats);
-        await fs.writeFile(outputPath, markdown, 'utf-8');
+        await fs.writeFile(outputPath, markdown, "utf-8");
     }
     catch (error) {
         // Manejo más seguro del error
@@ -129,7 +134,7 @@ export async function generateDocs(outputPath) {
             throw new Error(`Failed to generate documentation: ${error.message}`);
         }
         else {
-            throw new Error('Failed to generate documentation: An unknown error occurred');
+            throw new Error("Failed to generate documentation: An unknown error occurred");
         }
     }
 }

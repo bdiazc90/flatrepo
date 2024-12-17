@@ -30,11 +30,11 @@ flatrepo
 flatrepo myrepo.md
 ```
 
-
 ## Features
 
 - Generates markdown documentation of your repository
 - Includes YAML header with repository statistics
+- Ignore binary files (images, videos, zip, etc...)
 - Respects .gitignore patterns
 - Supports multiple file types
 - Formats code blocks according to file type
