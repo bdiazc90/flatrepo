@@ -1,0 +1,36 @@
+{
+  "name": "flatrepo",
+  "version": "1.0.0",
+  "description": "Generate markdown documentation for repositories",
+  "main": "dist/index.js",
+  "bin": {
+    "flatrepo": "./dist/cli.js"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc && chmod +x dist/cli.js",
+    "flatrepo": "node dist/cli.js"
+  },
+  "keywords": [
+    "documentation",
+    "markdown",
+    "repository",
+    "git"
+  ],
+  "author": "bdiazc90",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bdiazc90/flatrepo"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/yargs": "^17.0.33",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "glob": "^11.0.0",
+    "yaml": "^2.6.1",
+    "yargs": "^17.7.2"
+  }
+}
