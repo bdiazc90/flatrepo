@@ -28,7 +28,7 @@ async function getProjectFiles(outputPath: string, includeBin: boolean): Promise
 		for (const match of matches) {
 			if (match === outputPath) continue;
 
-			if (shouldIgnoreFile(match, gitignorePatterns)) continue;
+			if (shouldIgnoreFile(match, ignorePatterns)) continue;
 			try {
 				const stat = await fs.stat(match);
 				const extension = path.extname(match).toLowerCase();
