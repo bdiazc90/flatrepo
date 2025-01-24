@@ -10,7 +10,9 @@ export const DEFAULT_IGNORE_PATTERNS = [
   '.git/**',
   'dist/**',
   '.next/**',
-  'flatrepo_*.md'
+  'flatrepo_*.md',
+  '*_flat.md',
+  '*-flat.md'
 ];
 
 async function readGitignoreFile(filePath: string): Promise<string[]> {

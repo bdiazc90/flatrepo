@@ -10,7 +10,8 @@ Very useful to load knowledge to your favorite AI Agent like **Claude AI Project
 npm install -D flatrepo
 ```
 
-_Optional: You can set as script in your package.json_
+Optional: You can set as script in your package.json
+
 ```json
 {
   "scripts": {
@@ -20,19 +21,30 @@ _Optional: You can set as script in your package.json_
 ```
 
 ## Usage
-- Generate documentation in to default filename (flatrepo_YYYYMMDDHHIISS.md):
+
+Generate documentation in to default filename (flatrepo_YYYYMMDDHHIISS.md):
+
 ```bash
 flatrepo
 ```
 
-- Generate documentation in to a custom filename:
+Generate documentation in to a custom filename:
+
 ```bash
-flatrepo myrepo.md
+flatrepo myrepo-flat.md
 ```
 
-- Generate documentation including a description of binary files:
+> **Note**: Files matching any of these patterns are automatically ignored to prevent recursive inclusion in subsequent runs:
+>
+> - `flatrepo_*.md` (default output files)
+> - `*_flat.md` or `*-flat.md` (use one of these for custom filenames)
+>
+> Use custom filenames carefully, to prevent doubling the output size with each run!
+
+Generate documentation including a description of binary files:
+
 ```bash
-flatrepo myrepo.md --include-bin
+flatrepo --include-bin
 ```
 
 ## Features
@@ -40,7 +52,7 @@ flatrepo myrepo.md --include-bin
 - Generates markdown documentation of your repository
 - Includes YAML header with repository statistics
 - Ignore binary files (images, videos, zip, etc...)
-    - Include with description
+  - Include with description
 - Respects .gitignore patterns
 - Supports multiple file types
 - Formats code blocks according to file type
