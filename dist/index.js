@@ -2,18 +2,22 @@ import { glob } from "glob";
 import * as fs from "fs/promises";
 import * as path from "path";
 import { stringify } from "yaml";
-import { BINARY_EXTENSIONS, EXTENSION_TO_LANGUAGE, getBinaryFileType } from "./utils/file-types.js";
-import { DEFAULT_IGNORE_PATTERNS, getGitignorePatterns, shouldIgnoreFile } from "./utils/gitignore.js";
+import { BINARY_EXTENSIONS, EXTENSION_TO_LANGUAGE, getBinaryFileType, } from "./utils/file-types.js";
+import { DEFAULT_IGNORE_PATTERNS, getGitignorePatterns, shouldIgnoreFile, } from "./utils/gitignore.js";
 function getLanguageFromExtension(extension) {
     return EXTENSION_TO_LANGUAGE[extension] || "";
 }
-async function getProjectFiles(outputPath, includeBin) {
+async function getProjectFiles(outputPath, includeBin, directory) {
     const files = [];
     const gitignorePatterns = await getGitignorePatterns();
-    const ignorePatterns = [...DEFAULT_IGNORE_PATTERNS, ...gitignorePatterns, outputPath];
+    const ignorePatterns = [
+        ...DEFAULT_IGNORE_PATTERNS,
+        ...gitignorePatterns,
+        outputPath,
+    ];
     console.log("Patrones ignorados:", ignorePatterns);
     try {
-        const matches = await glob("**/*.*", {
+        const matches = await glob(`${directory}/**/*.*`, {
             dot: true,
             nodir: true,
         });
@@ -66,7 +70,8 @@ function calculateStats(files) {
     };
     for (const file of files) {
         stats.totalLines += file.content.split("\n").length;
-        stats.fileTypes[file.extension] = (stats.fileTypes[file.extension] || 0) + 1;
+        stats.fileTypes[file.extension] =
+            (stats.fileTypes[file.extension] || 0) + 1;
         const language = getLanguageFromExtension(file.extension);
         if (language) {
             stats.languages[language] = (stats.languages[language] || 0) + 1;
@@ -108,9 +113,9 @@ function generateMarkdown(files, stats) {
     return header + content;
 }
 // Main function
-export async function generateDocs(outputPath, includeBin = false) {
+export async function generateDocs(outputPath, includeBin = false, directory = ".") {
     try {
-        const files = await getProjectFiles(outputPath, includeBin);
+        const files = await getProjectFiles(outputPath, includeBin, directory);
         const stats = calculateStats(files);
         const markdown = generateMarkdown(files, stats);
         await fs.writeFile(outputPath, markdown, "utf-8");

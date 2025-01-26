@@ -24,11 +24,16 @@ yargs(hideBin(process.argv))
         type: 'boolean',
         describe: 'Include binary files with description',
         default: false
+    })
+        .option('dir', {
+        type: 'string',
+        describe: 'Specific directory to document',
+        default: '.'
     });
 }, async (argv) => {
     const outputFile = argv.output || getDefaultFilename();
     try {
-        await generateDocs(outputFile, argv.includeBin);
+        await generateDocs(outputFile, argv.includeBin, argv.dir);
         console.log(`FlatRepo generated successfully at: ${outputFile}`);
     }
     catch (error) {

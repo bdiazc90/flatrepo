@@ -35,6 +35,11 @@ flatrepo myrepo.md
 flatrepo myrepo.md --include-bin
 ```
 
+- Generate documentation for a specific directory:
+```bash
+flatrepo myrepo.md --dir src
+```
+
 ## Features
 
 - Generates markdown documentation of your repository
