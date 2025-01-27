@@ -44,10 +44,10 @@ async function getProjectFiles(
     for (const match of matches) {
       if (match === outputPath) continue;
 
-      if (shouldIgnoreFile(match, gitignorePatterns)) continue;
-      try {
-        const stat = await fs.stat(match);
-        const extension = path.extname(match).toLowerCase();
+			if (shouldIgnoreFile(match, ignorePatterns)) continue;
+			try {
+				const stat = await fs.stat(match);
+				const extension = path.extname(match).toLowerCase();
 
         if (stat.isFile()) {
           if (BINARY_EXTENSIONS.has(extension)) {
