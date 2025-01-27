@@ -12,13 +12,14 @@ function getDefaultFilename(): string {
   const hours = String(now.getHours()).padStart(2, '0');
   const minutes = String(now.getMinutes()).padStart(2, '0');
   const seconds = String(now.getSeconds()).padStart(2, '0');
-  
+
   return `flatrepo_${year}${month}${day}${hours}${minutes}${seconds}.md`;
 }
 
 interface Arguments {
   output?: string;
   includeBin?: boolean;
+  specificDir?: string;
 }
 
 yargs(hideBin(process.argv))
@@ -36,12 +37,17 @@ yargs(hideBin(process.argv))
         type: 'boolean',
         describe: 'Include binary files with description',
         default: false
+      })
+      .option('specificDir', {
+        type: 'string',
+        describe: 'Specific directory to document',
+        default: '.'
       });
     },
     async (argv) => {
       const outputFile = argv.output || getDefaultFilename();
       try {
-        await generateDocs(outputFile, argv.includeBin);
+        await generateDocs(outputFile, argv.includeBin, argv.specificDir as string);
         console.log(`FlatRepo generated successfully at: ${outputFile}`);
       } catch (error) {
         console.error('Error generating documentation:', error);
