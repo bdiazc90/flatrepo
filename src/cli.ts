@@ -13,7 +13,7 @@ function getDefaultFilename(): string {
   const minutes = String(now.getMinutes()).padStart(2, '0');
   const seconds = String(now.getSeconds()).padStart(2, '0');
 
-  return `flatrepo_${year}${month}${day}${hours}${minutes}${seconds}.md`;
+  return `flatrepo_${year}${month}${day}_${hours}${minutes}${seconds}.md`;
 }
 
 interface Arguments {
