@@ -2,7 +2,7 @@
 
 A CLI tool for generating a full repository documentation into a single markdown file.
 
-Very useful to load knowledge to your favorite AI Agent like **Claude AI Projects** or **ChatGPT Context**.
+Very useful to upload knowledge to your favorite AI Agent like **Claude AI** or **ChatGPT**.
 
 ## Installation
 
@@ -22,7 +22,7 @@ Optional: You can set as script in your package.json
 
 ## Usage
 
-Generate documentation in to default filename (flatrepo_YYYYMMDDHHIISS.md):
+Generate documentation in to default filename (flatrepo_YYYYMMDD_HHIISS.md):
 
 ```bash
 flatrepo
@@ -49,7 +49,7 @@ flatrepo --include-bin
 
 - Generate documentation for a specific directory:
 ```bash
-flatrepo myrepo.md --dir src
+flatrepo --dir src
 ```
 
 ## Features
@@ -61,3 +61,4 @@ flatrepo myrepo.md --dir src
 - Respects .gitignore patterns
 - Supports multiple file types
 - Formats code blocks according to file type
+- Specify a single directory to document instead of the entire repository
