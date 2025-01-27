@@ -21,7 +21,7 @@ function getLanguageFromExtension(extension: string): string {
 async function getProjectFiles(
   outputPath: string,
   includeBin: boolean,
-  directory: string
+  specificDir: string
 ): Promise<FileInfo[]> {
   const files: FileInfo[] = [];
 
@@ -36,7 +36,7 @@ async function getProjectFiles(
   console.log("Patrones ignorados:", ignorePatterns);
 
   try {
-    const matches = await glob(`${directory}/**/*.*`, {
+    const matches = await glob(`${specificDir}/**/*.*`, {
       dot: true,
       nodir: true,
     });
@@ -91,8 +91,7 @@ function calculateStats(files: FileInfo[]): RepoStats {
   for (const file of files) {
     stats.totalLines += file.content.split("\n").length;
 
-    stats.fileTypes[file.extension] =
-      (stats.fileTypes[file.extension] || 0) + 1;
+		stats.fileTypes[file.extension] = (stats.fileTypes[file.extension] || 0) + 1;
 
     const language = getLanguageFromExtension(file.extension);
     if (language) {
@@ -144,10 +143,10 @@ function generateMarkdown(files: FileInfo[], stats: RepoStats): string {
 export async function generateDocs(
   outputPath: string,
   includeBin: boolean = false,
-  directory: string = "."
+  specificDir: string = "."
 ): Promise<void> {
   try {
-    const files = await getProjectFiles(outputPath, includeBin, directory);
+    const files = await getProjectFiles(outputPath, includeBin, specificDir);
     const stats = calculateStats(files);
     const markdown = generateMarkdown(files, stats);
     await fs.writeFile(outputPath, markdown, "utf-8");
