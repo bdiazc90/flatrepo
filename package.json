@@ -1,6 +1,6 @@
 {
   "name": "flatrepo",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Generate markdown documentation for repositories",
   "main": "dist/index.js",
   "bin": {
@@ -8,7 +8,7 @@
   },
   "type": "module",
   "scripts": {
-    "build": "tsc && chmod +x dist/cli.js",
+    "build": "tsc",
     "flatrepo": "node dist/cli.js"
   },
   "keywords": [

@@ -21,7 +21,7 @@ function getLanguageFromExtension(extension: string): string {
 async function getProjectFiles(
   outputPath: string,
   includeBin: boolean,
-  specificDir: string
+  dir: string
 ): Promise<FileInfo[]> {
   const files: FileInfo[] = [];
 
@@ -36,7 +36,7 @@ async function getProjectFiles(
   console.log("Patrones ignorados:", ignorePatterns);
 
   try {
-    const matches = await glob(`${specificDir}/**/*.*`, {
+    const matches = await glob(`${dir}/**/*.*`, {
       dot: true,
       nodir: true,
     });
@@ -54,7 +54,7 @@ async function getProjectFiles(
             if (includeBin) {
               files.push({
                 path: match,
-                content: `(Archivo binario de ${getBinaryFileType(extension)})`,
+                content: `(Binary file of ${getBinaryFileType(extension)})`,
                 extension,
                 isBinary: true,
               });
@@ -70,11 +70,11 @@ async function getProjectFiles(
           }
         }
       } catch (error) {
-        console.warn(`Advertencia: No se pudo procesar ${match}:`, error);
+        console.warn(`WARNING: Can't process ${match}:`, error);
       }
     }
   } catch (error) {
-    throw new Error(`Error al buscar archivos: ${error}`);
+    throw new Error(`Error while finding files: ${error}`);
   }
 
   return files;
@@ -143,10 +143,10 @@ function generateMarkdown(files: FileInfo[], stats: RepoStats): string {
 export async function generateDocs(
   outputPath: string,
   includeBin: boolean = false,
-  specificDir: string = "."
+  dir: string = "."
 ): Promise<void> {
   try {
-    const files = await getProjectFiles(outputPath, includeBin, specificDir);
+    const files = await getProjectFiles(outputPath, includeBin, dir);
     const stats = calculateStats(files);
     const markdown = generateMarkdown(files, stats);
     await fs.writeFile(outputPath, markdown, "utf-8");

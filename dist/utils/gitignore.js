@@ -4,11 +4,23 @@ import { minimatch } from 'minimatch';
 export const DEFAULT_IGNORE_PATTERNS = [
     'node_modules/**',
     'package-lock.json',
+    'yarn.lock',
+    'pnpm-lock.yaml',
+    'bun.lockb',
+    'shrinkwrap.yaml',
+    'composer.lock',
+    'Gemfile.lock',
+    'poetry.lock',
+    'Cargo.lock',
+    'mix.lock',
     '**/.DS_Store',
     '.gitignore',
     '.git/**',
     'dist/**',
-    '.next/**'
+    '.next/**',
+    'flatrepo_*.md',
+    '*_flat.md',
+    '*-flat.md'
 ];
 async function readGitignoreFile(filePath) {
     try {

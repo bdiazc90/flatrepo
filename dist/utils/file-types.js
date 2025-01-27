@@ -25,27 +25,27 @@ export const EXTENSION_TO_LANGUAGE = {
     '.json': 'json'
 };
 const BINARY_TYPE_MAP = {
-    // Imágenes
-    '.jpg': 'imagen', '.jpeg': 'imagen', '.png': 'imagen', '.gif': 'imagen',
-    '.bmp': 'imagen', '.ico': 'imagen', '.webp': 'imagen', '.svg': 'imagen',
+    // Images
+    '.jpg': 'image', '.jpeg': 'image', '.png': 'image', '.gif': 'image',
+    '.bmp': 'image', '.ico': 'image', '.webp': 'image', '.svg': 'image',
     // Videos
     '.mp4': 'video', '.mov': 'video', '.avi': 'video', '.mkv': 'video',
     '.wmv': 'video', '.flv': 'video', '.webm': 'video',
     // Audio
     '.mp3': 'audio', '.wav': 'audio', '.ogg': 'audio', '.m4a': 'audio',
     '.flac': 'audio', '.aac': 'audio',
-    // Documentos
-    '.pdf': 'documento PDF', '.doc': 'documento Word', '.docx': 'documento Word',
-    '.xls': 'hoja de cálculo Excel', '.xlsx': 'hoja de cálculo Excel',
-    '.ppt': 'presentación PowerPoint', '.pptx': 'presentación PowerPoint',
-    // Comprimidos
-    '.zip': 'archivo comprimido', '.rar': 'archivo comprimido',
-    '.7z': 'archivo comprimido', '.tar': 'archivo comprimido',
-    '.gz': 'archivo comprimido',
+    // Documents
+    '.pdf': 'PDF document', '.doc': 'Word document', '.docx': 'Word document',
+    '.xls': 'Excel spreadsheet', '.xlsx': 'Excel spreadsheet',
+    '.ppt': 'PowerPoint presentation', '.pptx': 'PowerPoint presentation',
+    // Compressed
+    '.zip': 'compressed file', '.rar': 'compressed file',
+    '.7z': 'compressed file', '.tar': 'compressed file',
+    '.gz': 'compressed file',
     // Fonts
-    '.ttf': 'fuente tipográfica', '.otf': 'fuente tipográfica',
-    '.woff': 'fuente web', '.woff2': 'fuente web', '.eot': 'fuente web'
+    '.ttf': 'typeface font', '.otf': 'typeface font',
+    '.woff': 'web font', '.woff2': 'web font', '.eot': 'web font'
 };
 export function getBinaryFileType(extension) {
-    return BINARY_TYPE_MAP[extension.toLowerCase()] || 'archivo binario';
+    return BINARY_TYPE_MAP[extension.toLowerCase()] || 'binary file';
 }

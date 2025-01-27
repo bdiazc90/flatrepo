@@ -19,7 +19,7 @@ function getDefaultFilename(): string {
 interface Arguments {
   output?: string;
   includeBin?: boolean;
-  specificDir?: string;
+  dir?: string;
 }
 
 yargs(hideBin(process.argv))
@@ -38,7 +38,7 @@ yargs(hideBin(process.argv))
         describe: 'Include binary files with description',
         default: false
       })
-      .option('specificDir', {
+      .option('dir', {
         type: 'string',
         describe: 'Specific directory to document',
         default: '.'
@@ -47,7 +47,7 @@ yargs(hideBin(process.argv))
     async (argv) => {
       const outputFile = argv.output || getDefaultFilename();
       try {
-        await generateDocs(outputFile, argv.includeBin, argv.specificDir as string);
+        await generateDocs(outputFile, argv.includeBin, argv.dir as string);
         console.log(`FlatRepo generated successfully at: ${outputFile}`);
       } catch (error) {
         console.error('Error generating documentation:', error);
