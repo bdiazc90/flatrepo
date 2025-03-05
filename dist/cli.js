@@ -29,11 +29,16 @@ yargs(hideBin(process.argv))
         type: 'string',
         describe: 'Specific directory to document',
         default: '.'
+    })
+        .option('ignore-patterns', {
+        type: 'string',
+        describe: 'Additional patterns to ignore (comma separated)',
+        default: ''
     });
 }, async (argv) => {
     const outputFile = argv.output || getDefaultFilename();
     try {
-        await generateDocs(outputFile, argv.includeBin, argv.dir);
+        await generateDocs(outputFile, argv.includeBin, argv.dir, argv.ignorePatterns);
         console.log(`FlatRepo generated successfully at: ${outputFile}`);
     }
     catch (error) {

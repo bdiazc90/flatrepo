@@ -7,15 +7,27 @@ import { DEFAULT_IGNORE_PATTERNS, getGitignorePatterns, shouldIgnoreFile, } from
 function getLanguageFromExtension(extension) {
     return EXTENSION_TO_LANGUAGE[extension] || "";
 }
-async function getProjectFiles(outputPath, includeBin, dir) {
+async function getProjectFiles(outputPath, includeBin, dir, ignorePatterns = "") {
     const files = [];
     const gitignorePatterns = await getGitignorePatterns();
-    const ignorePatterns = [
+    const customIgnorePatterns = ignorePatterns
+        .split(',')
+        .map(pattern => pattern.trim())
+        .filter(pattern => pattern.length > 0)
+        // Convert to glob pattern format if needed
+        .map(pattern => {
+        if (!pattern.startsWith('/') && !pattern.startsWith('**/')) {
+            return `**/${pattern}`;
+        }
+        return pattern;
+    });
+    const ignoreList = [
         ...DEFAULT_IGNORE_PATTERNS,
         ...gitignorePatterns,
+        ...customIgnorePatterns,
         outputPath,
     ];
-    console.log("Patrones ignorados:", ignorePatterns);
+    console.log("Ignored patterns:", ignoreList);
     try {
         const matches = await glob(`${dir}/**/*.*`, {
             dot: true,
@@ -24,7 +36,7 @@ async function getProjectFiles(outputPath, includeBin, dir) {
         for (const match of matches) {
             if (match === outputPath)
                 continue;
-            if (shouldIgnoreFile(match, ignorePatterns))
+            if (shouldIgnoreFile(match, ignoreList))
                 continue;
             try {
                 const stat = await fs.stat(match);
@@ -112,9 +124,9 @@ function generateMarkdown(files, stats) {
     return header + content;
 }
 // Main function
-export async function generateDocs(outputPath, includeBin = false, dir = ".") {
+export async function generateDocs(outputPath, includeBin = false, dir = ".", ignorePatterns = "") {
     try {
-        const files = await getProjectFiles(outputPath, includeBin, dir);
+        const files = await getProjectFiles(outputPath, includeBin, dir, ignorePatterns);
         const stats = calculateStats(files);
         const markdown = generateMarkdown(files, stats);
         await fs.writeFile(outputPath, markdown, "utf-8");
