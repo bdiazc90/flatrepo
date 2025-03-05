@@ -72,5 +72,13 @@ export async function getGitignorePatterns(): Promise<string[]> {
 }
 
 export function shouldIgnoreFile(filePath: string, patterns: string[]): boolean {
-  return patterns.some(pattern => minimatch(filePath, pattern, { dot: true }));
+  return patterns.some(pattern => {
+    // Usar opciones específicas para minimatch para mejorar la coincidencia de archivos
+    return minimatch(filePath, pattern, { 
+      dot: true,      // Coincidir con archivos que comienzan con punto
+      matchBase: true, // Coincidir basename contra patrón si no tiene slash
+      nocomment: true, // Deshabilitar comentarios
+      nonegate: false  // Permitir negación (!)
+    });
+  });
 }

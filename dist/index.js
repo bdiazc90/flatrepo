@@ -16,16 +16,27 @@ async function getProjectFiles(outputPath, includeBin, dir, ignorePatterns = "")
         .filter(pattern => pattern.length > 0)
         // Convert to glob pattern format if needed
         .map(pattern => {
-        if (!pattern.startsWith('/') && !pattern.startsWith('**/')) {
+        // Si el patrón es un directorio (termina con /)
+        if (pattern.endsWith('/')) {
+            return `**/${pattern}**`; // Asegurar que coincida con cualquier archivo dentro
+        }
+        // Si el patrón parece ser un directorio sin slash final (como .netlify)
+        else if (!pattern.includes('.') || pattern.startsWith('.')) {
+            return `**/${pattern}/**`; // Tratar como directorio
+        }
+        // Si es un patrón de archivo, asegurarse que tenga el formato adecuado para glob
+        else if (!pattern.startsWith('/') && !pattern.startsWith('**/')) {
             return `**/${pattern}`;
         }
         return pattern;
     });
     const ignoreList = [
-        ...DEFAULT_IGNORE_PATTERNS,
-        ...gitignorePatterns,
-        ...customIgnorePatterns,
-        outputPath,
+        ...new Set([
+            ...DEFAULT_IGNORE_PATTERNS,
+            ...gitignorePatterns,
+            ...customIgnorePatterns,
+            outputPath,
+        ])
     ];
     console.log("Ignored patterns:", ignoreList);
     try {
