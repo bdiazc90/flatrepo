@@ -20,6 +20,7 @@ interface Arguments {
   output?: string;
   includeBin?: boolean;
   dir?: string;
+  ignorePatterns?: string;
 }
 
 yargs(hideBin(process.argv))
@@ -42,12 +43,17 @@ yargs(hideBin(process.argv))
         type: 'string',
         describe: 'Specific directory to document',
         default: '.'
+      })
+      .option('ignore-patterns', {
+        type: 'string',
+        describe: 'Additional patterns to ignore (comma separated)',
+        default: ''
       });
     },
     async (argv) => {
       const outputFile = argv.output || getDefaultFilename();
       try {
-        await generateDocs(outputFile, argv.includeBin, argv.dir as string);
+        await generateDocs(outputFile, argv.includeBin, argv.dir as string, argv.ignorePatterns);
         console.log(`FlatRepo generated successfully at: ${outputFile}`);
       } catch (error) {
         console.error('Error generating documentation:', error);

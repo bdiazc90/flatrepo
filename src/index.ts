@@ -21,19 +21,33 @@ function getLanguageFromExtension(extension: string): string {
 async function getProjectFiles(
   outputPath: string,
   includeBin: boolean,
-  dir: string
+  dir: string,
+  ignorePatterns: string = ""
 ): Promise<FileInfo[]> {
   const files: FileInfo[] = [];
 
   const gitignorePatterns = await getGitignorePatterns();
 
-  const ignorePatterns = [
+  const customIgnorePatterns = ignorePatterns
+    .split(',')
+    .map(pattern => pattern.trim())
+    .filter(pattern => pattern.length > 0)
+    // Convert to glob pattern format if needed
+    .map(pattern => {
+      if (!pattern.startsWith('/') && !pattern.startsWith('**/')) {
+        return `**/${pattern}`;
+      }
+      return pattern;
+    });
+
+  const ignoreList = [
     ...DEFAULT_IGNORE_PATTERNS,
     ...gitignorePatterns,
+    ...customIgnorePatterns,
     outputPath,
   ];
 
-  console.log("Patrones ignorados:", ignorePatterns);
+  console.log("Ignored patterns:", ignoreList);
 
   try {
     const matches = await glob(`${dir}/**/*.*`, {
@@ -44,7 +58,7 @@ async function getProjectFiles(
     for (const match of matches) {
       if (match === outputPath) continue;
 
-			if (shouldIgnoreFile(match, ignorePatterns)) continue;
+			if (shouldIgnoreFile(match, ignoreList)) continue;
 			try {
 				const stat = await fs.stat(match);
 				const extension = path.extname(match).toLowerCase();
@@ -143,10 +157,11 @@ function generateMarkdown(files: FileInfo[], stats: RepoStats): string {
 export async function generateDocs(
   outputPath: string,
   includeBin: boolean = false,
-  dir: string = "."
+  dir: string = ".",
+  ignorePatterns: string = ""
 ): Promise<void> {
   try {
-    const files = await getProjectFiles(outputPath, includeBin, dir);
+    const files = await getProjectFiles(outputPath, includeBin, dir, ignorePatterns);
     const stats = calculateStats(files);
     const markdown = generateMarkdown(files, stats);
     await fs.writeFile(outputPath, markdown, "utf-8");

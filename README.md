@@ -52,6 +52,11 @@ flatrepo --include-bin
 flatrepo --dir src
 ```
 
+- Ignore specific file patterns (comma separated):
+```bash
+flatrepo --ignore-patterns="*.sql,*.log"
+```
+
 ## Features
 
 - Generates markdown documentation of your repository
@@ -62,3 +67,4 @@ flatrepo --dir src
 - Supports multiple file types
 - Formats code blocks according to file type
 - Specify a single directory to document instead of the entire repository
+- Specify custom patterns to ignore with the --ignore-patterns option
