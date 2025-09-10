@@ -6,8 +6,23 @@ import * as path from "path";
 import { getRepoData, flatrepo } from "./v2-core.js";
 import { FlatrepoOptions } from "./types/v2.js";
 
+// v2.0 PUBLIC API EXPORTS
+export { getRepoData, flatrepo } from "./v2-core.js";
+
+// Re-export v2 types for public use
+export { 
+  RepoSource, 
+  RepoData, 
+  RepoMeta, 
+  FileData, 
+  FlatrepoOptions,
+  RepoStats,
+  FlatrepoFetchError, 
+  FlatrepoProcessError 
+} from "./types/v2.js";
+
 // Re-export v1 types for backward compatibility
-export { FileInfo, RepoStats } from "./types/index.js";
+export { FileInfo } from "./types/index.js";
 
 /**
  * v1.5 Implementation: generateDocs using new architecture internally

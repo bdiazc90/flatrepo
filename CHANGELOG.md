@@ -5,6 +5,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-09-10
+
+### 🚀 Major Release - Library API + GitHub Support
+
+### Added
+- **NEW**: Public library API - use `getRepoData()` and `flatrepo()` functions programmatically
+- **NEW**: GitHub repository support - document any public GitHub repository
+- **NEW**: CLI GitHub support - `flatrepo https://github.com/user/repo output.md`
+- **NEW**: GitHub Archive API integration for efficient repository downloading
+- **NEW**: ZIP file extraction with yauzl library
+- **ENHANCED**: TypeScript interfaces exported for library usage (`RepoSource`, `RepoData`, `FileData`, etc.)
+
+### Changed
+- **BREAKING**: Tool signature updated to "FlatRepo v2.0.0" in generated markdown
+- **BREAKING**: Version bumped to 2.0.0 due to major new functionality
+- **ENHANCED**: CLI now detects GitHub URLs automatically
+- **ENHANCED**: Repository metadata includes commit SHA for GitHub repositories
+
+### Library API
+```typescript
+import { getRepoData, flatrepo } from 'flatrepo';
+
+// Local directory
+const localRepo = await getRepoData({ path: './src' });
+
+// GitHub repository  
+const githubRepo = await getRepoData({ url: 'https://github.com/user/repo' });
+
+// Generate markdown
+const markdown = await flatrepo(repoData, options);
+```
+
+### Compatibility
+- **✅ 100% BACKWARD COMPATIBLE**: CLI interface for local directories unchanged
+- **✅ IDENTICAL OUTPUT**: Generated markdown format unchanged (except tool version)
+- **✅ SAME OPTIONS**: All existing CLI options work identically
+- **✅ API COMPATIBLE**: `generateDocs()` function still available for library usage
+
+### Technical Details
+- Added yauzl dependency for ZIP file extraction
+- GitHub Archive API integration with proper error handling
+- Commit SHA extraction from Content-Disposition headers
+- Automatic gitignore pattern application (defaults only for remote repos)
+
+---
+
 ## [1.4.6] - 2025-09-10
 
 ### Fixed

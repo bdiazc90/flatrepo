@@ -3,6 +3,10 @@
 import * as fs from "fs/promises";
 import * as path from "path";
 import { getRepoData, flatrepo } from "./v2-core.js";
+// v2.0 PUBLIC API EXPORTS
+export { getRepoData, flatrepo } from "./v2-core.js";
+// Re-export v2 types for public use
+export { FlatrepoFetchError, FlatrepoProcessError } from "./types/v2.js";
 /**
  * v1.5 Implementation: generateDocs using new architecture internally
  * External API remains exactly the same - users see no difference
