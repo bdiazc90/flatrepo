@@ -57,6 +57,11 @@ flatrepo --dir src
 flatrepo --ignore-patterns="*.sql,*.log"
 ```
 
+- Show detailed output with ignored patterns and processing information:
+```bash
+flatrepo --verbose
+```
+
 ## Features
 
 - Generates markdown documentation of your repository
@@ -68,3 +73,4 @@ flatrepo --ignore-patterns="*.sql,*.log"
 - Formats code blocks according to file type
 - Specify a single directory to document instead of the entire repository
 - Specify custom patterns to ignore with the --ignore-patterns option
+- Show detailed processing information with --verbose option

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.6] - 2025-09-10
+
+### Fixed
+- **DOCUMENTATION**: Added missing --verbose option to README.md with usage examples
+- **DOCUMENTATION**: Added --verbose option to Features list in README.md
+
+### Technical Details  
+- Fixed documentation gap identified after v1.4.5 release
+- Enhanced README.md with complete --verbose usage information
+- Followed improved release protocol to prevent future documentation omissions
+
+---
+
 ## [1.4.5] - 2025-09-10
 
 ### Added

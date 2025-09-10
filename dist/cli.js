@@ -54,7 +54,7 @@ yargs(hideBin(process.argv))
             second: '2-digit',
             timeZoneName: 'short'
         });
-        console.log(`FlatRepo v1.4.5 - ${humanTime}`);
+        console.log(`FlatRepo v1.4.6 - ${humanTime}`);
     }
     else {
         // En verbose, mostrar el output original con timestamp
@@ -68,7 +68,7 @@ yargs(hideBin(process.argv))
             second: '2-digit',
             timeZoneName: 'short'
         });
-        console.log(`FlatRepo v1.4.5 - Verbose mode`);
+        console.log(`FlatRepo v1.4.6 - Verbose mode`);
         console.log(`${humanTime}`);
     }
     try {
