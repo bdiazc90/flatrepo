@@ -17,14 +17,17 @@ export async function generateDocs(
   outputPath: string,
   includeBin: boolean = false,
   dir: string = ".",
-  ignorePatterns: string = ""
+  ignorePatterns: string = "",
+  verbose: boolean = false
 ): Promise<void> {
   try {
     // v1.5: Use new architecture internally
-    console.log("Ignored patterns:", ignorePatterns || "(none)");
+    if (verbose) {
+      console.log("Ignored patterns attached:", ignorePatterns || "(none)");
+    }
     
-    // Step 1: Get repository data (replaces getProjectFiles)
-    const repoData = await getRepoData({ path: dir });
+    // Step 1: Get repository data (replaces getProjectFiles)  
+    const repoData = await getRepoData({ path: dir }, verbose);
     
     // Step 2: Filter out outputPath from files (same as v1.2 behavior)
     const filteredRepoData = {
@@ -42,7 +45,7 @@ export async function generateDocs(
       ignorePatterns,
     };
     
-    const markdown = await flatrepo(filteredRepoData, options);
+    const markdown = await flatrepo(filteredRepoData, options, verbose);
     
     // Step 4: Write output (same as v1.2)
     await fs.writeFile(outputPath, markdown, "utf-8");

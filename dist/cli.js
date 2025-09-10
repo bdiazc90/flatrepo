@@ -34,11 +34,45 @@ yargs(hideBin(process.argv))
         type: 'string',
         describe: 'Additional patterns to ignore (comma separated)',
         default: ''
+    })
+        .option('verbose', {
+        type: 'boolean',
+        describe: 'Show detailed output including ignored patterns',
+        default: false
     });
 }, async (argv) => {
     const outputFile = argv.output || getDefaultFilename();
+    // Show version and timestamp info only in normal mode (not verbose)  
+    if (!argv.verbose) {
+        const now = new Date();
+        const humanTime = now.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZoneName: 'short'
+        });
+        console.log(`FlatRepo v1.4.5 - ${humanTime}`);
+    }
+    else {
+        // En verbose, mostrar el output original con timestamp
+        const now = new Date();
+        const humanTime = now.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            timeZoneName: 'short'
+        });
+        console.log(`FlatRepo v1.4.5 - Verbose mode`);
+        console.log(`${humanTime}`);
+    }
     try {
-        await generateDocs(outputFile, argv.includeBin, argv.dir, argv.ignorePatterns);
+        await generateDocs(outputFile, argv.includeBin, argv.dir, argv.ignorePatterns, argv.verbose);
         console.log(`FlatRepo generated successfully at: ${outputFile}`);
     }
     catch (error) {

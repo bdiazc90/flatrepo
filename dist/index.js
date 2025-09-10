@@ -7,12 +7,14 @@ import { getRepoData, flatrepo } from "./v2-core.js";
  * v1.5 Implementation: generateDocs using new architecture internally
  * External API remains exactly the same - users see no difference
  */
-export async function generateDocs(outputPath, includeBin = false, dir = ".", ignorePatterns = "") {
+export async function generateDocs(outputPath, includeBin = false, dir = ".", ignorePatterns = "", verbose = false) {
     try {
         // v1.5: Use new architecture internally
-        console.log("Ignored patterns:", ignorePatterns || "(none)");
-        // Step 1: Get repository data (replaces getProjectFiles)
-        const repoData = await getRepoData({ path: dir });
+        if (verbose) {
+            console.log("Ignored patterns attached:", ignorePatterns || "(none)");
+        }
+        // Step 1: Get repository data (replaces getProjectFiles)  
+        const repoData = await getRepoData({ path: dir }, verbose);
         // Step 2: Filter out outputPath from files (same as v1.2 behavior)
         const filteredRepoData = {
             ...repoData,
@@ -27,7 +29,7 @@ export async function generateDocs(outputPath, includeBin = false, dir = ".", ig
             includeBin,
             ignorePatterns,
         };
-        const markdown = await flatrepo(filteredRepoData, options);
+        const markdown = await flatrepo(filteredRepoData, options, verbose);
         // Step 4: Write output (same as v1.2)
         await fs.writeFile(outputPath, markdown, "utf-8");
     }

@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.5] - 2025-09-10
+
+### Added
+- **NEW**: `--verbose` option to show detailed output including ignored patterns
+- **ENHANCED**: Clean CLI output by default showing only version and timestamp in human-readable format
+
+### Changed
+- **IMPROVED**: Ignored patterns are now hidden by default (use `--verbose` to show them)
+- **ENHANCED**: CLI shows "FlatRepo v1.4.5 - [human readable date/time]" in normal mode
+- **ENHANCED**: Tool signature updated to "FlatRepo v1.4.5" in generated markdown
+
+### Technical Details
+- Added `verbose` parameter to `generateDocs()` function (backward compatible)
+- Enhanced CLI with better user experience for normal usage
+- Maintained full backward compatibility for library usage
+
+---
+
 ## [1.4.0] - 2025-09-10
 
 ### Changed
