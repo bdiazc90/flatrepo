@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-09-15
+
+### 🚀 New Feature - Directory Tree Structure
+
+### Added
+- **NEW**: Directory tree visualization in YAML header - see complete repository structure at a glance
+- **ENHANCED**: ASCII tree representation showing folders and files hierarchy
+- **ENHANCED**: Tool signature updated to "FlatRepo v2.1.0" in generated markdown
+
+### Example Output
+The YAML header now includes a `directory_tree` section:
+```yaml
+directory_tree: |-
+  .
+  ├── src/
+  │   ├── components/
+  │   │   ├── Header.tsx
+  │   │   └── Footer.tsx
+  │   └── utils/
+  │       └── helpers.ts
+  ├── tests/
+  │   └── utils.test.ts
+  └── package.json
+```
+
+### Compatibility
+- **✅ 100% BACKWARD COMPATIBLE**: All existing functionality preserved
+- **✅ NO BREAKING CHANGES**: CLI options and library API unchanged
+- **✅ ENHANCED METADATA**: Richer YAML header without affecting file content sections
+
+---
+
 ## [2.0.0] - 2025-09-10
 
 ### 🚀 Major Release - Library API + GitHub Support
