@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.1] - 2025-09-15
+
+### 🚨 Critical Fix - Missing Core Files
+
+### Fixed
+- **CRITICAL**: Fixed .gitignore configuration excluding core v2.0 files from NPM distribution
+- **CRITICAL**: Added missing `src/v2-core.ts` and `src/types/v2.ts` to repository and NPM package
+- **FIXED**: v2.0+ library API now works correctly - users can import `getRepoData` and `flatrepo` functions
+
+### Technical Details
+- Removed incorrect .gitignore entries that were preventing core files from being published
+- Force-added essential TypeScript files containing v2.0+ functionality
+- Updated tool signature to "FlatRepo v2.1.1"
+- Enhanced README.md with directory tree feature documentation
+
+### Impact
+- **Before v2.1.1**: NPM package was missing core functionality, library API didn't work
+- **After v2.1.1**: Complete working package with all v2.0+ features available
+
+### Compatibility
+- **✅ 100% BACKWARD COMPATIBLE**: All existing functionality preserved
+- **✅ WORKING LIBRARY API**: `getRepoData()` and `flatrepo()` functions now properly available
+- **✅ ENHANCED DOCS**: README updated with directory tree examples
+
+---
+
 ## [2.1.0] - 2025-09-15
 
 ### 🚀 New Feature - Directory Tree Structure

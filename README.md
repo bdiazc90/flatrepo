@@ -4,11 +4,12 @@ A CLI tool and library for generating repository documentation into a single mar
 
 Very useful to upload knowledge to your favorite AI Agent like **Claude AI** or **ChatGPT**.
 
-## ✨ v2.0 Features
+## ✨ v2.1 Features
 
 - 🏠 **Local repositories**: Document any directory on your filesystem
 - 🌐 **GitHub repositories**: Document any public GitHub repository directly
-- 📚 **Library API**: Use as a Node.js library in your projects  
+- 🌳 **Directory tree**: Visual repository structure in YAML header
+- 📚 **Library API**: Use as a Node.js library in your projects
 - 🔧 **CLI tool**: Same familiar command-line interface
 
 ## Installation
@@ -85,7 +86,8 @@ console.log(markdown);
 ## Features
 
 - Generates markdown documentation of your repository
-- Includes YAML header with repository statistics
+- Includes YAML header with repository statistics and **directory tree structure**
+- **Directory tree visualization** - ASCII tree showing complete repository structure
 - Ignore binary files (images, videos, zip, etc...)
   - Include with description
 - Respects .gitignore patterns
@@ -94,3 +96,36 @@ console.log(markdown);
 - Specify a single directory to document instead of the entire repository
 - Specify custom patterns to ignore with the --ignore-patterns option
 - Show detailed processing information with --verbose option
+
+## 🌳 Directory Tree Feature (v2.1+)
+
+The generated markdown now includes a visual directory tree in the YAML header:
+
+```yaml
+---
+repository:
+  name: my-project
+  kind: local
+generated:
+  timestamp: 2025-09-15T10:30:00Z
+  tool: FlatRepo v2.1.1
+statistics:
+  totalFiles: 12
+  totalLines: 450
+directory_tree: |-
+  .
+  ├── src/
+  │   ├── components/
+  │   │   ├── Header.tsx
+  │   │   └── Footer.tsx
+  │   ├── utils/
+  │   │   └── helpers.ts
+  │   └── index.ts
+  ├── tests/
+  │   └── utils.test.ts
+  ├── package.json
+  └── README.md
+---
+```
+
+This provides an instant overview of your repository structure, making it easier for AI agents to understand the codebase organization.

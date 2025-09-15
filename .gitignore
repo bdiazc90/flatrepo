@@ -50,7 +50,3 @@ PLAN.md
 
 # Local research:
 local/**
-
-# v2.0 development files (internal, not for distribution)
-src/v2-core.ts
-src/types/v2.ts
