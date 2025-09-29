@@ -71,6 +71,11 @@ yargs(hideBin(process.argv))
         type: 'boolean',
         describe: 'Show detailed output including ignored patterns',
         default: false
+    })
+        .option('only-git-diff', {
+        type: 'boolean',
+        describe: 'Only include files with uncommitted git changes',
+        default: false
     });
 }, async (argv) => {
     // Detect if first argument is a GitHub URL
@@ -102,7 +107,7 @@ yargs(hideBin(process.argv))
             second: '2-digit',
             timeZoneName: 'short'
         });
-        console.log(`FlatRepo v2.0.0 - ${humanTime}`);
+        console.log(`FlatRepo v2.2.0 - ${humanTime}`);
     }
     else {
         // En verbose, mostrar el output original con timestamp
@@ -116,7 +121,7 @@ yargs(hideBin(process.argv))
             second: '2-digit',
             timeZoneName: 'short'
         });
-        console.log(`FlatRepo v2.0.0 - Verbose mode`);
+        console.log(`FlatRepo v2.2.0 - Verbose mode`);
         console.log(`${humanTime}`);
     }
     try {
@@ -126,8 +131,8 @@ yargs(hideBin(process.argv))
             await generateDocsFromGitHub(sourceUrl, outputFile, argv.includeBin, argv.ignorePatterns, argv.verbose);
         }
         else {
-            // Traditional v1.x functionality: local directory  
-            await generateDocs(outputFile, argv.includeBin, argv.dir, argv.ignorePatterns, argv.verbose);
+            // Traditional v1.x functionality: local directory
+            await generateDocs(outputFile, argv.includeBin, argv.dir, argv.ignorePatterns, argv.verbose, argv.onlyGitDiff);
         }
         console.log(`FlatRepo generated successfully at: ${outputFile}`);
     }

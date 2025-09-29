@@ -5,6 +5,7 @@ import * as fs from "fs/promises";
 import * as path from "path";
 import { getRepoData, flatrepo } from "./v2-core.js";
 import { FlatrepoOptions } from "./types/v2.js";
+import { getGitModifiedFiles, isGitRepository } from "./utils/git.js";
 
 // v2.0 PUBLIC API EXPORTS
 export { getRepoData, flatrepo } from "./v2-core.js";
@@ -33,7 +34,8 @@ export async function generateDocs(
   includeBin: boolean = false,
   dir: string = ".",
   ignorePatterns: string = "",
-  verbose: boolean = false
+  verbose: boolean = false,
+  onlyGitDiff: boolean = false
 ): Promise<void> {
   try {
     // v1.5: Use new architecture internally
@@ -41,16 +43,44 @@ export async function generateDocs(
       console.log("Ignored patterns attached:", ignorePatterns || "(none)");
     }
     
-    // Step 1: Get repository data (replaces getProjectFiles)  
+    // Check if onlyGitDiff is requested
+    let gitModifiedFiles: string[] = [];
+    if (onlyGitDiff) {
+      if (!isGitRepository(dir)) {
+        throw new Error("--only-git-diff option requires a git repository");
+      }
+      gitModifiedFiles = getGitModifiedFiles(dir);
+      if (gitModifiedFiles.length === 0) {
+        console.log("No uncommitted changes found in git working directory");
+        await fs.writeFile(outputPath, "# No uncommitted changes\n\nNo files with uncommitted changes were found in the git working directory.", "utf-8");
+        return;
+      }
+      if (verbose) {
+        console.log(`Found ${gitModifiedFiles.length} files with uncommitted changes`);
+      }
+    }
+
+    // Step 1: Get repository data (replaces getProjectFiles)
     const repoData = await getRepoData({ path: dir }, verbose);
-    
-    // Step 2: Filter out outputPath from files (same as v1.2 behavior)
+
+    // Step 2: Filter files based on criteria
     const filteredRepoData = {
       ...repoData,
       files: repoData.files.filter(file => {
         const fullPath = path.resolve(dir, file.path);
         const fullOutputPath = path.resolve(outputPath);
-        return fullPath !== fullOutputPath;
+
+        // Always exclude output file
+        if (fullPath === fullOutputPath) {
+          return false;
+        }
+
+        // If onlyGitDiff is enabled, only include files in git diff
+        if (onlyGitDiff) {
+          return gitModifiedFiles.includes(fullPath);
+        }
+
+        return true;
       })
     };
     
@@ -59,7 +89,12 @@ export async function generateDocs(
       includeBin,
       ignorePatterns,
     };
-    
+
+    // Pass onlyGitDiff flag through metadata extension
+    if (onlyGitDiff) {
+      (filteredRepoData as any).onlyGitDiff = true;
+    }
+
     const markdown = await flatrepo(filteredRepoData, options, verbose);
     
     // Step 4: Write output (same as v1.2)

@@ -624,6 +624,9 @@ function generateHeader(files: FileData[], stats: RepoStats, repoData: RepoData)
   // Generate directory tree structure
   const directoryTree = generateDirectoryTree(files);
 
+  // Check if this is a git-diff only generation
+  const isGitDiffMode = (repoData as any).onlyGitDiff === true;
+
   const header = {
     repository: {
       name: repoName,
@@ -638,13 +641,25 @@ function generateHeader(files: FileData[], stats: RepoStats, repoData: RepoData)
     },
     generated: {
       timestamp: repoData.meta.fetchedAt,
-      tool: "FlatRepo v2.1.1",
+      tool: "FlatRepo v2.2.0",
+      ...(isGitDiffMode && { mode: "git-diff-only" }),
     },
     statistics: stats,
     directory_tree: directoryTree,
+    ...(isGitDiffMode && {
+      important_note: "This document contains ONLY files with uncommitted git changes. Other repository files remain unchanged and are not included here.",
+    }),
   };
 
-  return `---\n${stringify(header)}---\n\n`;
+  let headerString = `---\n${stringify(header)}---\n\n`;
+
+  // Add prominent notice if in git-diff mode
+  if (isGitDiffMode) {
+    headerString += `> **⚠️ GIT DIFF MODE**: This document shows ONLY files with uncommitted changes in the git working directory.\n`;
+    headerString += `> Files not shown here remain unchanged in the repository.\n\n`;
+  }
+
+  return headerString;
 }
 
 /**

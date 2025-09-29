@@ -75,11 +75,12 @@ console.log(markdown);
 ### 🛠️ CLI Options
 
 - **Custom filename**: `flatrepo myrepo-flat.md`
-- **Include binary files**: `flatrepo --include-bin` 
+- **Include binary files**: `flatrepo --include-bin`
 - **Specific directory**: `flatrepo --dir src`
 - **Ignore patterns**: `flatrepo --ignore-patterns="*.sql,*.log"`
 - **Verbose output**: `flatrepo --verbose`
 - **GitHub repository**: `flatrepo https://github.com/user/repo`
+- **Only git changes**: `flatrepo --only-git-diff` (v2.2+)
 
 > **Note**: Files matching patterns like `flatrepo_*.md`, `*_flat.md` or `*-flat.md` are automatically ignored to prevent recursive inclusion.
 
@@ -96,6 +97,7 @@ console.log(markdown);
 - Specify a single directory to document instead of the entire repository
 - Specify custom patterns to ignore with the --ignore-patterns option
 - Show detailed processing information with --verbose option
+- **Git diff mode** (v2.2+) - Document only files with uncommitted changes
 
 ## 🌳 Directory Tree Feature (v2.1+)
 
@@ -129,3 +131,22 @@ directory_tree: |-
 ```
 
 This provides an instant overview of your repository structure, making it easier for AI agents to understand the codebase organization.
+
+## 📝 Git Diff Mode (v2.2+)
+
+The `--only-git-diff` option allows you to generate documentation only for files with uncommitted changes in your git working directory:
+
+```bash
+# Document only modified, added, or deleted files
+flatrepo --only-git-diff
+
+# Combine with other options
+flatrepo --only-git-diff --include-bin output.md
+```
+
+This is particularly useful when:
+- You want to quickly review recent changes with an AI assistant
+- You need to document only the work in progress
+- You want to reduce the context size by focusing on current modifications
+
+**Note**: This option requires the directory to be a git repository. If no uncommitted changes are found, a minimal document will be generated indicating no changes.

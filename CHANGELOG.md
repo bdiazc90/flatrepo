@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2025-09-29
+
+### 🎯 New Feature - Git Diff Mode
+
+### Added
+- **NEW**: `--only-git-diff` option to document only files with uncommitted git changes
+- **NEW**: `getGitModifiedFiles()` utility function to retrieve files in git working directory
+- **NEW**: `isGitRepository()` utility function to check if directory is a git repo
+- **ENHANCED**: Git diff mode documentation in README with usage examples
+
+### Changed
+- **ENHANCED**: `generateDocs()` function now supports git diff filtering
+- **ENHANCED**: CLI accepts the new `--only-git-diff` parameter
+- **ENHANCED**: Tool signature updated to "FlatRepo v2.2.0" in generated markdown
+
+### Technical Details
+- The `--only-git-diff` option filters files to include only those reported by `git status --porcelain`
+- Useful for quickly reviewing current changes with AI assistants without including the entire repository
+- Requires the directory to be a git repository when enabled
+- Returns informative message when no uncommitted changes are found
+
+### Compatibility
+- **✅ 100% BACKWARD COMPATIBLE**: All existing functionality preserved
+- **✅ NEW FEATURE**: Optional git diff mode, doesn't affect existing workflows
+- **✅ LIBRARY API**: `generateDocs()` function signature extended with optional parameter
+
+---
+
 ## [2.1.1] - 2025-09-15
 
 ### 🚨 Critical Fix - Missing Core Files
