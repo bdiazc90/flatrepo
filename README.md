@@ -4,7 +4,7 @@ A CLI tool and library for generating repository documentation into a single mar
 
 Very useful to upload knowledge to your favorite AI Agent like **Claude AI** or **ChatGPT**.
 
-## ✨ v2.1 Features
+## ✨ v2.2.1 Features
 
 - 🏠 **Local repositories**: Document any directory on your filesystem
 - 🌐 **GitHub repositories**: Document any public GitHub repository directly
@@ -14,11 +14,39 @@ Very useful to upload knowledge to your favorite AI Agent like **Claude AI** or 
 
 ## Installation
 
+### Local Installation (Recommended for projects)
+
 ```bash
 npm install -D flatrepo
 ```
 
-Optional: You can set as script in your package.json
+### Global Installation (Use from anywhere)
+
+```bash
+npm install -g flatrepo
+```
+
+After global installation, you can use `flatrepo` command from any directory.
+
+### 🔄 Upgrading to Latest Version
+
+When a new version is released, you can easily upgrade using:
+
+```bash
+# Using npx (recommended - no installation needed)
+npx flatrepo-upgrade
+
+# Or if you have flatrepo installed
+flatrepo-upgrade
+```
+
+The upgrade utility will:
+- Detect your current version (local or global)
+- Compare with the latest version on npm
+- Automatically upgrade if a newer version is available
+- Show what's new in the latest version
+
+### Optional: Add as npm script
 
 ```json
 {

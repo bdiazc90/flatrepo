@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.1] - 2025-09-29
+
+### 🔧 New Upgrade Utility
+
+### Added
+- **NEW**: `flatrepo-upgrade` command for easy upgrades
+- **NEW**: Upgrade utility executable via `npx flatrepo-upgrade`
+- **NEW**: `--version` flag support in CLI
+- **ENHANCED**: Auto-detection of local vs global installations during upgrade
+- **ENHANCED**: Version comparison and changelog highlights on upgrade
+
+### Changed
+- **ENHANCED**: README with upgrade instructions and global installation section
+- **ENHANCED**: Tool signature updated to "FlatRepo v2.2.1"
+
+### Technical Details
+- New `src/upgrade.ts` utility that can be run with `npx flatrepo-upgrade`
+- Detects current installation (local/global) and upgrades accordingly
+- Shows current vs latest version comparison
+- Provides manual fallback commands if automatic upgrade fails
+
+---
+
 ## [2.2.0] - 2025-09-29
 
 ### 🎯 New Feature - Git Diff Mode

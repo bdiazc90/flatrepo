@@ -107,7 +107,7 @@ yargs(hideBin(process.argv))
             second: '2-digit',
             timeZoneName: 'short'
         });
-        console.log(`FlatRepo v2.2.0 - ${humanTime}`);
+        console.log(`FlatRepo v2.2.1 - ${humanTime}`);
     }
     else {
         // En verbose, mostrar el output original con timestamp
@@ -121,7 +121,7 @@ yargs(hideBin(process.argv))
             second: '2-digit',
             timeZoneName: 'short'
         });
-        console.log(`FlatRepo v2.2.0 - Verbose mode`);
+        console.log(`FlatRepo v2.2.1 - Verbose mode`);
         console.log(`${humanTime}`);
     }
     try {
@@ -141,6 +141,7 @@ yargs(hideBin(process.argv))
         process.exit(1);
     }
 })
+    .version('2.2.1')
     .strict()
     .help()
     .parse();

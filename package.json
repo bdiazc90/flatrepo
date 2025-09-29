@@ -1,10 +1,11 @@
 {
   "name": "flatrepo",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Generate markdown documentation for repositories",
   "main": "dist/index.js",
   "bin": {
-    "flatrepo": "dist/cli.js"
+    "flatrepo": "dist/cli.js",
+    "flatrepo-upgrade": "dist/upgrade.js"
   },
   "type": "module",
   "scripts": {

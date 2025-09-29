@@ -641,7 +641,7 @@ function generateHeader(files: FileData[], stats: RepoStats, repoData: RepoData)
     },
     generated: {
       timestamp: repoData.meta.fetchedAt,
-      tool: "FlatRepo v2.2.0",
+      tool: "FlatRepo v2.2.1",
       ...(isGitDiffMode && { mode: "git-diff-only" }),
     },
     statistics: stats,
